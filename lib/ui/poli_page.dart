@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import '../widget/sidebar.dart';
 import '../model/poli.dart';
-import 'poli_form.dart';
+import '../service/poli_service.dart';
 import 'poli_detail.dart';
+import 'poli_form.dart';
+import 'poli_item.dart';
+import '../widget/sidebar.dart';
 
-class Polipage extends StatefulWidget {
-  @override
+class PoliPage extends StatefulWidget {
+  const PoliPage({Key? key}) : super(key: key);
   _PoliPageState createState() => _PoliPageState();
 }
 
-class _PoliPageState extends State<Polipage> {
-  final List<Poli> poliList = [
-    Poli(namaPoli: "Poli Anak"),
-    Poli(namaPoli: "Poli Kandungan"),
-    Poli(namaPoli: "Poli Gigi"),
-    Poli(namaPoli: "Poli THT"),
-    Poli(namaPoli: "Poli Mata"),
-  ];
+class _PoliPageState extends State<PoliPage> {
+  Stream<List<Poli>> getList() async* {
+    List<Poli> data = await PoliService().listData();
+    yield data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,39 +26,36 @@ class _PoliPageState extends State<Polipage> {
         actions: [
           GestureDetector(
             child: const Icon(Icons.add),
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PoliForm()),
-              );
-              if (result != null) {
-                // Tambahkan data baru ke daftar poliList
-                setState(() {
-                  poliList.add(result);
-                });
-              }
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        children: poliList.map((poli) {
-          return GestureDetector(
-            child: Card(
-              child: ListTile(
-                title: Text(poli.namaPoli),
-              ),
-            ),
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PoliDetail(poli: poli),
-                ),
-              );
+                  context, MaterialPageRoute(builder: (context) => PoliForm()));
+            },
+          )
+        ],
+      ),
+      body: StreamBuilder(
+        stream: getList(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (!snapshot.hasData &&
+              snapshot.connectionState == ConnectionState.done) {
+            return Text('Data Kosong');
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return PoliItem(poli: snapshot.data[index]);
             },
           );
-        }).toList(),
+        },
       ),
     );
   }
