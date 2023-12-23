@@ -1,3 +1,4 @@
+import 'package:aplikasi_poli/ui/pegawai/pegawai_page.dart';
 import 'package:flutter/material.dart';
  import '../ui/beranda.dart';
  import '../ui/login.dart';
@@ -30,16 +31,21 @@ import 'package:flutter/material.dart';
  context, MaterialPageRoute(builder: (context) => PoliPage()));
  },
  ),
+ 
  ListTile(
  leading: Icon(Icons.people),
  title: Text("Pegawai"),
- onTap: () {},
+ onTap: () {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => PegawaiPage()));
+ },
  ),
+
  ListTile(
  leading: Icon(Icons.account_box_sharp),
  title: Text("Pasien"),
  onTap: () {},
  ),
+
  ListTile(
  leading: Icon(Icons.logout_rounded),
  title: Text("Keluar"),
@@ -50,6 +56,7 @@ import 'package:flutter/material.dart';
  (Route<dynamic> route) => false);
  },
  )
+ 
  ],
  ),
  );
