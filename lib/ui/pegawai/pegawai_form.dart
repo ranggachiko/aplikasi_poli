@@ -23,11 +23,16 @@ class _PegawaiFormState extends State<PegawaiForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Tambah Pegawai")),
+      appBar: AppBar(
+        title: const Text("Tambah Pegawai",style: TextStyle(fontSize: 20)),
+        backgroundColor: Colors.deepOrange,
+        ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _fieldNamaPegawai(),
               _fieldNip(),
@@ -35,7 +40,7 @@ class _PegawaiFormState extends State<PegawaiForm> {
               _fieldNomorTelepon(),
               _fieldEmail(),
               _fieldPassword(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _tombolSimpan(),
             ],
           ),
@@ -46,7 +51,10 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldNamaPegawai() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Nama Pegawai"),
+      decoration: const InputDecoration(
+        labelText: "Nama Pegawai",
+        border: OutlineInputBorder(),
+        ),
       controller: _namaPegawaiCtrl,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -59,7 +67,10 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldNip() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "NIP"),
+      decoration: const InputDecoration(
+        labelText: "NIP",
+        border: OutlineInputBorder(),
+        ),
       controller: _nipCtrl,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -72,7 +83,10 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldTanggalLahir() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Tanggal Lahir"),
+      decoration: const InputDecoration(
+        labelText: "Tanggal Lahir",
+        border: OutlineInputBorder(),
+        ),
       controller: _tanggalLahirCtrl,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -85,7 +99,10 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldNomorTelepon() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Nomor Telepon"),
+      decoration: const InputDecoration(
+        labelText: "Nomor Telepon",
+        border: OutlineInputBorder(),
+        ),
       controller: _nomorTeleponCtrl,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -98,7 +115,9 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldEmail() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Email"),
+      decoration: const InputDecoration(
+        labelText: "Email",
+        border: OutlineInputBorder(),),
       controller: _emailCtrl,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -111,7 +130,10 @@ class _PegawaiFormState extends State<PegawaiForm> {
 
   _fieldPassword() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Password"),
+      decoration: InputDecoration(
+        labelText: "Password",
+        border: OutlineInputBorder(),
+      ),
       controller: _passwordCtrl,
       obscureText: true,
       validator: (value) {
@@ -123,8 +145,8 @@ class _PegawaiFormState extends State<PegawaiForm> {
     );
   }
 
-  _tombolSimpan() {
-  return ElevatedButton(
+  /*_tombolSimpan() {
+  return ElevatedButton.icon(
     onPressed: () async {
       if (_formKey.currentState?.validate() ?? false) {
         Pegawai pegawai = Pegawai(
@@ -141,7 +163,50 @@ class _PegawaiFormState extends State<PegawaiForm> {
         });
       }
     },
-    child: const Text("Simpan"),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.deepOrange,
+        fixedSize: Size(50, 40),
+      ),
+      //child: const Text("Simpan", style: TextStyle(fontSize: 18)),
+      icon: Icon(Icons.save), // Tambahkan ikon "save"
+      label: Text("Simpan", style: TextStyle(fontSize: 18)),
+  );
+}*/
+_tombolSimpan() {
+  return InkWell(
+    onTap: () async {
+      if (_formKey.currentState?.validate() ?? false) {
+        Pegawai pegawai = Pegawai(
+          idPegawai: DateTime.now().millisecondsSinceEpoch,
+          namaPegawai: _namaPegawaiCtrl.text,
+          nip: _nipCtrl.text,
+          tanggalLahir: _tanggalLahirCtrl.text,
+          nomorTelepon: _nomorTeleponCtrl.text,
+          email: _emailCtrl.text,
+          password: _passwordCtrl.text,
+        );
+        await PegawaiService().simpan(pegawai).then((value) {
+          Navigator.pop(context);
+        });
+      }
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.deepOrange,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.save, color: Colors.white),
+            SizedBox(width: 10),
+            Text("Simpan", style: TextStyle(fontSize: 18, color: Colors.white)),
+          ],
+        ),
+      ),
+    ),
   );
 }
 }

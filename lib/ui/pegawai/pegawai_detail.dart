@@ -33,7 +33,10 @@ class _PegawaiDetailState extends State<PegawaiDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Detail Pegawai")),
+      appBar: AppBar(
+        title: Text("Detail Pegawai"),
+        backgroundColor: Colors.deepOrange,
+        ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(

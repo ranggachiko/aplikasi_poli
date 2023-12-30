@@ -24,6 +24,7 @@ class _PegawaiPageState extends State<PegawaiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepOrange,
         title: const Text("Data Pegawai RS"),
         actions: [
           GestureDetector(

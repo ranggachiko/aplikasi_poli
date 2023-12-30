@@ -3,6 +3,7 @@ import '/helpers/user_info.dart';
 import '/ui/beranda.dart';
 import '/ui/login.dart';
 import '/ui/pegawai/pegawai_page.dart';
+import './ui/pasien/pasien.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,7 @@ Future<void> main() async {
     routes: {
       '/beranda': (context) => Beranda(),
       '/pegawai': (context) => PegawaiPage(),
+      '/pasien': (context) => PasienPage(),
     },
   ));
 }

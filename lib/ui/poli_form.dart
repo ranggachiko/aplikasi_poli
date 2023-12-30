@@ -5,6 +5,8 @@ import 'poli_detail.dart';
 
 class PoliForm extends StatefulWidget {
   const PoliForm({Key? key}) : super(key: key);
+
+  @override
   _PoliFormState createState() => _PoliFormState();
 }
 
@@ -15,12 +17,24 @@ class _PoliFormState extends State<PoliForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Tambah Poli")),
-      body: SingleChildScrollView(
+      appBar: AppBar(
+        title: const Text(
+          "Tambah Poli",
+          style: TextStyle(fontSize: 20),
+        ),
+        backgroundColor: Colors.deepOrange,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
-            children: [_fieldNamaPoli(), SizedBox(height: 20), _tombolSimpan()],
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _fieldNamaPoli(),
+              const SizedBox(height: 20),
+              _tombolSimpan(),
+            ],
           ),
         ),
       ),
@@ -28,23 +42,41 @@ class _PoliFormState extends State<PoliForm> {
   }
 
   _fieldNamaPoli() {
-    return TextField(
-      decoration: const InputDecoration(labelText: "Nama Poli"),
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Nama Poli",
+        border: OutlineInputBorder(),
+      ),
       controller: _namaPoliCtrl,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Nama Poli tidak boleh kosong';
+        }
+        return null;
+      },
     );
   }
 
   _tombolSimpan() {
     return ElevatedButton(
-        onPressed: () async {
-          Poli poli = new Poli(namaPoli: _namaPoliCtrl.text);
+      onPressed: () async {
+        if (_formKey.currentState?.validate() ?? false) {
+          Poli poli = Poli(namaPoli: _namaPoliCtrl.text);
           await PoliService().simpan(poli).then((value) {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PoliDetail(poli: value)));
+              context,
+              MaterialPageRoute(builder: (context) => PoliDetail(poli: value)),
+            );
           });
-        },
-        child: const Text("Simpan"));
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        primary: Colors.deepOrange,
+      ),
+      child: const Text(
+        "Simpan",
+        style: TextStyle(fontSize: 18),
+      ),
+    );
   }
 }
